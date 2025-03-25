@@ -1,4 +1,5 @@
 from datetime import datetime
+import os
 from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 from fastapi.encoders import jsonable_encoder
 from app.models.course import Course, CourseUpdate, Lesson
@@ -7,9 +8,14 @@ from fastapi.responses import StreamingResponse
 from bson import ObjectId
 from app.db.mongo import get_db
 import gridfs
+import tempfile
+import whisper
+import ffmpeg
 
 router = APIRouter()
 db, fs = get_db()
+
+
 
 @router.post("/courses/")
 async def add_course(
@@ -18,23 +24,47 @@ async def add_course(
     end_date: str = Form(...),
     video: UploadFile = File(...)
 ):
-    """Endpoint para cadastrar um curso e salvar vídeo no MongoDB GridFS"""
+    """Endpoint para cadastrar um curso, salvar vídeo no MongoDB GridFS e transcrever o áudio"""
+    
+    # Salvar vídeo no GridFS
     video_content = await video.read()
     video_size_mb = len(video_content) / (1024 * 1024)
     video.file.seek(0)
-
     video_id = fs.put(video.file, filename=video.filename)
+
+    # Criar arquivo temporário para o vídeo
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as temp_video:
+        temp_video.write(video_content)
+        video_path = temp_video.name
+
+    # Extrair áudio e transcrever
+    audio_path = video_path.replace(".mp4", ".wav")
+    ffmpeg.input(video_path).output(audio_path, format="wav", ac=1, ar="16000").run(overwrite_output=True)
+
+    model = whisper.load_model("small") 
+    result = model.transcribe(audio_path)
     
+    # Criar curso no banco
     course_data = Course(
         title=title,
         description=description,
         end_date=datetime.strptime(end_date, "%Y-%m-%d"),
+        transcript=result["text"],
         video_size_mb=video_size_mb,
         video_id=str(video_id)
     )
     
+    # Remover arquivos temporários
+    os.unlink(video_path)
+    os.unlink(audio_path)
+    
     course_id = create_course(course_data)
-    return {"id": course_id, "message": "Curso criado com sucesso", "video_id": str(video_id)}
+    return {
+        "id": course_id,
+        "message": "Curso criado com sucesso",
+        "video_id": str(video_id),
+        "transcription": result["text"]
+    }
 
 @router.get("/courses/")
 async def list_active_courses():
@@ -109,7 +139,7 @@ async def add_lesson(
     description: str = Form(...),
     video: UploadFile = File(...)
 ):
-    """Endpoint para cadastrar uma aula em um curso"""
+    """Endpoint para cadastrar uma aula em um curso com transcrição de áudio"""
     # Verificar se o curso existe
     course = db.courses.find_one({"_id": ObjectId(course_id)})
     if not course:
@@ -121,21 +151,43 @@ async def add_lesson(
     video.file.seek(0)
     video_id = fs.put(video.file, filename=video.filename)
 
+    # Criar arquivo temporário para o vídeo
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as temp_video:
+        temp_video.write(video_content)
+        video_path = temp_video.name
+
+    # Extrair áudio e transcrever
+    audio_path = video_path.replace(".mp4", ".wav")
+    ffmpeg.input(video_path).output(audio_path, format="wav", ac=1, ar="16000").run(overwrite_output=True)
+
+    model = whisper.load_model("small")
+    transcription_result = model.transcribe(audio_path)  # Renomeei para evitar conflito
+
     # Criar a aula
     lesson_data = Lesson(
         title=title,
         description=description,
         video_id=str(video_id),
-        video_size_mb=video_size_mb
+        video_size_mb=video_size_mb,
+        transcript=transcription_result["text"]  # Usando o resultado da transcrição
     ).dict()
 
     # Adicionar o course_id à aula
     lesson_data["course_id"] = ObjectId(course_id)
 
     # Inserir a aula na coleção lessons
-    result = db.lessons.insert_one(lesson_data)
-    return {"id": str(result.inserted_id), "message": "Aula adicionada com sucesso", "video_id": str(video_id)}
+    insert_result = db.lessons.insert_one(lesson_data)  # Renomeei para evitar conflito
+    
+    # Remover arquivos temporários
+    os.unlink(video_path)
+    os.unlink(audio_path)
 
+    return {
+        "id": str(insert_result.inserted_id),
+        "message": "Aula adicionada com sucesso",
+        "video_id": str(video_id),
+        "transcription": transcription_result["text"]  # Usando o resultado correto
+    }
 
 @router.get("/courses/{course_id}/lessons/")
 async def list_course_lessons(course_id: str):

@@ -16,7 +16,7 @@ class Course(BaseModel):
     end_date: datetime
     video_size_mb: Optional[float] = None
     video_id: Optional[str] = None
-    lessons: Optional[List[Lesson]] = []
+    transcript: Optional[str] = None
 
 class CourseUpdate(BaseModel):
     title: Optional[str] = None
