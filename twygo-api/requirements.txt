@@ -1,0 +1,9 @@
+python-multipart
+fastapi
+uvicorn
+python-dotenv
+ffmpeg-python
+moviepy
+openai
+pymongo
+git+https://github.com/openai/whisper.git
