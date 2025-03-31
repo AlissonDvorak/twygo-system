@@ -201,3 +201,30 @@ async def list_course_lessons(course_id: str):
     # Buscar todas as aulas do curso
     lessons = db.lessons.find({"course_id": ObjectId(course_id)})
     return {"lessons": [jsonable_encoder({**lesson, "_id": str(lesson["_id"]), "course_id": str(lesson["course_id"])}) for lesson in lessons]}
+
+@router.delete("/courses/{course_id}/lessons/{lesson_id}")
+async def remove_lesson(course_id: str, lesson_id: str):
+    """Remove uma lição específica de um curso e seu vídeo associado"""
+    # Verificar se o curso existe
+    course = db.courses.find_one({"_id": ObjectId(course_id)})
+    if not course:
+        raise HTTPException(status_code=404, detail="Curso não encontrado")
+
+    # Buscar a lição
+    lesson = db.lessons.find_one({"_id": ObjectId(lesson_id), "course_id": ObjectId(course_id)})
+    if not lesson:
+        raise HTTPException(status_code=404, detail="Lição não encontrada")
+
+    # Deletar o vídeo associado no GridFS, se existir
+    if "video_id" in lesson and lesson["video_id"]:
+        try:
+            fs.delete(ObjectId(lesson["video_id"]))
+        except gridfs.errors.NoFile:
+            pass  # Ignorar se o vídeo não existir
+
+    # Deletar a lição da coleção lessons
+    result = db.lessons.delete_one({"_id": ObjectId(lesson_id)})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Lição não encontrada")
+
+    return {"message": "Lição e vídeo associados removidos com sucesso"}
