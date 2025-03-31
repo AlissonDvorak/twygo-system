@@ -8,6 +8,7 @@ class Lesson(BaseModel):
     description: str
     video_id: Optional[str] = None
     video_size_mb: Optional[float] = None
+    transcript: Optional[str] = None
     created_at: datetime = datetime.utcnow()
 
 class Course(BaseModel):

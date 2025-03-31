@@ -169,14 +169,16 @@ async def add_lesson(
         description=description,
         video_id=str(video_id),
         video_size_mb=video_size_mb,
-        transcript=transcription_result["text"]  # Usando o resultado da transcrição
+        transcript=transcription_result["text"] 
     ).dict()
 
     # Adicionar o course_id à aula
     lesson_data["course_id"] = ObjectId(course_id)
 
     # Inserir a aula na coleção lessons
-    insert_result = db.lessons.insert_one(lesson_data)  # Renomeei para evitar conflito
+    insert_result = db.lessons.insert_one(lesson_data)  
+    
+    print(insert_result)
     
     # Remover arquivos temporários
     os.unlink(video_path)
