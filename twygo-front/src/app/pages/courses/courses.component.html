@@ -1,8 +1,7 @@
-<!-- courses.component.html -->
 <div class="container">
   <h1>CURSOS</h1>
   <div class="course-grid">
-    <div class="course-card" *ngFor="let course of courses" (click)="redirectToCourse(course._id)">
+    <div class="course-card" *ngFor="let course of courses">
       <!-- Exibe o vídeo se videoUrl estiver disponível, caso contrário, exibe a imagem -->
       <ng-container *ngIf="course.videoUrl; else imageFallback">
         <video
@@ -20,7 +19,7 @@
       <ng-template #imageFallback>
         <img [src]="course.imageUrl || 'https://placehold.co/300x200'" alt="{{ course.title }}" class="course-image" />
       </ng-template>
-      <div class="course-info">
+      <div class="course-info" (click)="redirectToCourse(course._id)">
         <h3>{{ course.title }}</h3>
         <p class="description">{{ course.description }}</p>
         <div class="course-details">
@@ -28,9 +27,74 @@
           <span class="duration">{{ course.duration }} horas</span>
           <span>Valido: {{ course.end_date | date:'dd/MM/yy' }}</span>
         </div>
-        
+      </div>
+      <!-- Ícone de engrenagem e menu -->
+      <div class="settings-icon" (click)="toggleSettingsMenu(course._id, $event)">
+        ⚙️
+      </div>
+      <div class="settings-menu" *ngIf="selectedCourseId === course._id">
+        <button (click)="openEditModal(course)">Editar</button>
+        <button (click)="deleteCourse(course._id)">Excluir</button>
       </div>
     </div>
   </div>
 </div>
 
+<!-- Modal de Edição -->
+<nz-modal
+  [(nzVisible)]="isEditModalVisible"
+  nzTitle="Editar Curso"
+  (nzOnCancel)="closeEditModal()"
+  (nzOnOk)="saveEdit()"
+  [nzOkText]="'Salvar'"
+  [nzCancelText]="'Cancelar'"
+  [nzWidth]="600"
+  [nzBodyStyle]="{ padding: '0' }"
+  [nzOkLoading]="isLoading"
+  [nzOkDisabled]="isLoading || !isEditFormValid()"
+>
+  <ng-container *nzModalContent>
+    <nz-spin [nzSpinning]="isLoading" nzTip="Salvando alterações...">
+      <div class="modal-content-wrapper">
+        <p class="modal-description">Edite os detalhes do curso.</p>
+        <form class="course-form" (ngSubmit)="saveEdit()">
+          <div class="form-group">
+            <label for="editTitle">Título do Curso</label>
+            <input
+              type="text"
+              id="editTitle"
+              name="editTitle"
+              [(ngModel)]="editCourseData.title"
+              placeholder="ex.: Introdução ao Desenvolvimento Web"
+              required
+              [disabled]="isLoading"
+            />
+          </div>
+          <div class="form-group">
+            <label for="editDescription">Descrição</label>
+            <textarea
+              id="editDescription"
+              name="editDescription"
+              [(ngModel)]="editCourseData.description"
+              placeholder="Forneça uma breve descrição do curso"
+              rows="3"
+              required
+              [disabled]="isLoading"
+            ></textarea>
+          </div>
+          <div class="form-group">
+            <label for="editEndDate">Data de Término</label>
+            <input
+              type="date"
+              id="editEndDate"
+              name="editEndDate"
+              [(ngModel)]="editCourseData.end_date"
+              required
+              [disabled]="isLoading"
+            />
+          </div>
+        </form>
+      </div>
+    </nz-spin>
+  </ng-container>
+</nz-modal>

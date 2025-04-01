@@ -37,6 +37,7 @@ $transition: all 0.2s ease;
 }
 
 .course-card {
+  position: relative; /* Para posicionar o ícone e menu */
   background: #fff;
   border-radius: $border-radius;
   box-shadow: $shadow;
@@ -63,12 +64,6 @@ $transition: all 0.2s ease;
       color: $primary-color;
     }
 
-    .instructor {
-      font-size: 0.9rem;
-      color: $muted-color;
-      margin: 0 0 10px;
-    }
-
     .description {
       font-size: 0.95rem;
       color: $text-color;
@@ -87,11 +82,81 @@ $transition: all 0.2s ease;
         }
       }
     }
+  }
 
-    .extra-info {
-      font-size: 0.85rem;
-      color: $muted-color;
-      margin: 5px 0 0;
+  .settings-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    color: $muted-color;
+    transition: $transition;
+
+    &:hover {
+      color: $secondary-color;
     }
+  }
+
+  .settings-menu {
+    position: absolute;
+    top: 35px;
+    right: 10px;
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: $shadow;
+    padding: 5px 0;
+    z-index: 10;
+
+    button {
+      display: block;
+      width: 100%;
+      padding: 5px 10px;
+      border: none;
+      background: none;
+      text-align: left;
+      cursor: pointer;
+      color: $text-color;
+
+      &:hover {
+        background: #f0f0f0;
+      }
+
+      &:nth-child(2) {
+        color: #dc3545; /* Vermelho para "Excluir" */
+      }
+    }
+  }
+}
+
+.modal-content-wrapper {
+  padding: 20px;
+}
+
+.modal-description {
+  margin-bottom: 20px;
+  color: $muted-color;
+}
+
+.form-group {
+  margin-bottom: 15px;
+
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+
+  textarea {
+    resize: vertical;
   }
 }

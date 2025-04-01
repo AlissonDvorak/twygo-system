@@ -49,14 +49,16 @@ export class CourseService {
     );
   }
 
-  // Novo método para buscar o vídeo do curso
   getCourseVideo(courseId: any): string {
     console.log('URL do vídeo:', `${this.apiUrl}${courseId}/video`);
     return `${this.apiUrl}${courseId}/video`;
   }
 
-  
-  
+  updateCourse(courseId: string, courseData: Partial<Course>): Observable<any> {
+    return this.http.put(`${this.apiUrl}${courseId}`, courseData);
+  }
 
-
+  deleteCourse(courseId: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}${courseId}`);
+  }
 }

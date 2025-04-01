@@ -4,17 +4,27 @@ import { TopMenuComponent } from '../../shared/top-menu/top-menu.component';
 import { Course } from '../../models/course.model';
 import { CourseService } from '../../core/services/course.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ChatComponent } from '../../shared/chat/chat.component';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-courses',
   templateUrl: './courses.component.html',
   styleUrls: ['./courses.component.scss'],
   standalone: true,
-  imports: [CommonModule, TopMenuComponent]
+  imports: [CommonModule, TopMenuComponent, NzModalModule, NzSpinModule, FormsModule]
 })
 export class CoursesComponent implements OnInit {
   courses: Course[] = [];
+  selectedCourseId: string | null = null;
+  isEditModalVisible = false;
+  isLoading = false;
+  editCourseData: Partial<Course> = {
+    title: '',
+    description: '',
+    end_date: ''
+  };
 
   constructor(
     private courseService: CourseService,
@@ -51,6 +61,68 @@ export class CoursesComponent implements OnInit {
   }
 
   setVideoToStart(video: HTMLVideoElement): void {
-    video.currentTime = 0; // Define o tempo do vídeo como 0 (primeiro frame)
+    video.currentTime = 0;
+  }
+
+  toggleSettingsMenu(courseId: any, event: Event): void {
+    event.stopPropagation(); // Impede que o clique no ícone redirecione
+    this.selectedCourseId = this.selectedCourseId === courseId ? null : courseId;
+  }
+
+  openEditModal(course: Course): void {
+    this.editCourseData = {
+      title: course.title,
+      description: course.description,
+      end_date: course.end_date
+    };
+    this.isEditModalVisible = true;
+    this.selectedCourseId = null; // Fecha o menu
+  }
+
+  closeEditModal(): void {
+    this.isEditModalVisible = false;
+    this.editCourseData = { title: '', description: '', end_date: '' };
+  }
+
+  saveEdit(): void {
+    if (!this.isEditFormValid()) {
+      alert('Por favor, preencha todos os campos obrigatórios.');
+      return;
+    }
+
+    this.isLoading = true;
+    this.courseService.updateCourse(this.selectedCourseId!, this.editCourseData).subscribe({
+      next: (response) => {
+        console.log('Curso atualizado:', response);
+        this.isEditModalVisible = false;
+        this.isLoading = false;
+        this.loadCourses(); // Recarrega os cursos
+      },
+      error: (error) => {
+        console.error('Erro ao atualizar curso:', error);
+        alert('Ocorreu um erro ao salvar as alterações.');
+        this.isLoading = false;
+      }
+    });
+  }
+
+  deleteCourse(courseId: string): void {
+    if (confirm('Tem certeza que deseja excluir este curso? Isso também excluirá todas as aulas associadas.')) {
+      this.courseService.deleteCourse(courseId).subscribe({
+        next: (response) => {
+          console.log('Curso excluído:', response);
+          this.loadCourses(); // Recarrega os cursos
+          this.selectedCourseId = null; // Fecha o menu
+        },
+        error: (error) => {
+          console.error('Erro ao excluir curso:', error);
+          alert('Ocorreu um erro ao excluir o curso.');
+        }
+      });
+    }
+  }
+
+  isEditFormValid(): boolean {
+    return !!this.editCourseData.title && !!this.editCourseData.description && !!this.editCourseData.end_date;
   }
 }

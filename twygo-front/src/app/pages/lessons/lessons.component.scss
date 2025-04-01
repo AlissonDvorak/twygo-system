@@ -29,6 +29,7 @@ $shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         margin: 0;
         width: 80%;
         margin: 0 auto;
+        color: white;
       }
   
       .course-info {
@@ -48,10 +49,12 @@ $shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   
         .course-details {
           flex: 1;
+
   
           h1 {
             font-size: 24px;
             margin: 0;
+            color: white;
           }
   
           p {
