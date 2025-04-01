@@ -1,9 +1,10 @@
-// src/app/pages/courses/courses.component.ts
+// courses.component.ts
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common'; // Importe o CommonModule
+import { CommonModule } from '@angular/common';
 import { TopMenuComponent } from '../../shared/top-menu/top-menu.component';
 import { Course } from '../../models/course.model';
 import { CourseService } from '../../core/services/course.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-courses',
@@ -18,7 +19,11 @@ import { CourseService } from '../../core/services/course.service';
 export class CoursesComponent {
   courses: Course[] = [];
 
-  constructor(private courseService: CourseService) {}
+  constructor(
+    private courseService: CourseService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
     this.loadCourses();
@@ -33,5 +38,10 @@ export class CoursesComponent {
         console.error('Erro ao carregar os cursos:', error);
       }
     });
+  }
+
+  redirectToCourse(courseId: any): void {
+    // Passa o courseId como parte da URL
+    this.router.navigate([`/lessons/${courseId}`]);
   }
 }

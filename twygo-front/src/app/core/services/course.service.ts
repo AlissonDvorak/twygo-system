@@ -1,3 +1,4 @@
+// course.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -8,7 +9,7 @@ import { Course } from '../../models/course.model';
   providedIn: 'root'
 })
 export class CourseService {
-  private apiUrl = 'http://localhost:8000/api/courses/'; // Certifique-se de que a URL corresponde ao seu backend
+  private apiUrl = 'http://localhost:8000/api/courses/';
 
   constructor(private http: HttpClient) {}
 
@@ -30,9 +31,30 @@ export class CourseService {
     const formData = new FormData();
     formData.append('title', courseData.title);
     formData.append('description', courseData.description);
-    formData.append('end_date', courseData.end_date); 
-    formData.append('video', videoFile); 
+    formData.append('end_date', courseData.end_date);
+    formData.append('video', videoFile);
 
     return this.http.post(this.apiUrl, formData);
+  }
+
+  getCourseById(id: string): Observable<Course> {
+    return this.http.get<Course>(`${this.apiUrl}${id}`).pipe(
+      map(course => ({
+        ...course,
+        instructor: course.instructor || 'Instrutor Desconhecido',
+        lessonsCount: Array.isArray(course.lessons) ? course.lessons.length : course.lessons || Math.floor(Math.random() * 10) + 5,
+        duration: course.duration || `${Math.floor(Math.random() * 5) + 3} hours`,
+        imageUrl: course.imageUrl || `https://placehold.co/350x300`,
+        lessons: Array.isArray(course.lessons) ? course.lessons : []
+      }))
+    );
+  }
+
+  // Ajusta o método para aceitar um lessonId opcional
+  getCourseVideo(courseId: string, lessonId?: string): string {
+    if (lessonId) {
+      return `${this.apiUrl}${courseId}/video?lesson_id=${lessonId}`;
+    }
+    return `${this.apiUrl}${courseId}/video`;
   }
 }

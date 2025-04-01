@@ -42,6 +42,7 @@ $transition: all 0.2s ease;
   box-shadow: $shadow;
   overflow: hidden;
   transition: $transition;
+  cursor: pointer;
 
   &:hover {
     transform: translateY(-5px);

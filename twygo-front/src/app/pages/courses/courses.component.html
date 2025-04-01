@@ -4,7 +4,7 @@
   <a href="#" class="browse-link">Browse all available courses</a>
 
   <div class="course-grid">
-    <div class="course-card" *ngFor="let course of courses">
+    <div class="course-card" *ngFor="let course of courses" (click)="redirectToCourse(course._id)">
       <img [src]="course.imageUrl" alt="{{ course.title }}" class="course-image" />
       <div class="course-info">
         <h3>{{ course.title }}</h3>

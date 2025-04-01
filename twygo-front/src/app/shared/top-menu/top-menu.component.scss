@@ -59,7 +59,7 @@ $shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
 }
 
-// Estilizar o modal com ::ng-deep corretamente
+
 ::ng-deep {
   .ant-modal {
     border-radius: 12px;
@@ -74,7 +74,7 @@ $shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     align-items: center;
 
     .ant-spin-dot {
-      font-size: 32px; // Aumenta o tamanho do spinner
+      font-size: 32px; 
     }
 
     .ant-spin-text {

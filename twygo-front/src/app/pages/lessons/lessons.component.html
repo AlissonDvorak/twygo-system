@@ -1,1 +1,70 @@
-<p>lessons works!</p>
+<!-- lessons.component.html -->
+<div class="course-container">
+  <!-- Header Section -->
+  <div class="header">
+    <a href="#" class="back-link" (click)="backToLessons()">← Back to Course</a>
+    <h1 *ngIf="selectedLesson" class="lesson-title">Introduction to React: React Fundamentals</h1>
+    <div class="course-info" *ngIf="!selectedLesson">
+      <img [src]="course?.imageUrl" alt="Course Image" class="course-image">
+      <div class="course-details">
+        <h1>{{ course?.title }}</h1>
+        <p>{{ course?.description }}</p>
+        <div class="course-meta">
+          <span>📖 {{ course?.lessonsCount }} lessons</span>
+          <span>⏰ {{ course?.duration }}</span>
+        </div>
+        <p>Instructor: {{ course?.instructor }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lessons Section -->
+  <div class="lessons-section">
+    <!-- Exibe a lista de lições se nenhuma aula estiver selecionada -->
+    <div *ngIf="!selectedLesson">
+      <div class="lessons-header">
+        <h2>Lessons</h2>
+        <button (click)="addLesson()" class="add-lesson-btn">+ Add Lesson</button>
+      </div>
+      <div class="lessons-list">
+        <div *ngFor="let lesson of lessons" class="lesson-card" (click)="selectLesson(lesson)">
+          <span class="lesson-number">{{ lesson.id }}</span>
+          <div class="lesson-info">
+            <h3>{{ lesson.title }}</h3>
+            <p>{{ lesson.description }}</p>
+            <p>{{ lesson.duration }}</p>
+          </div>
+          <span class="play-icon">▶</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Exibe o conteúdo da aula selecionada -->
+    <div *ngIf="selectedLesson" class="lesson-content">
+      <div class="video-section">
+        <!-- Substitui a tag <img> por <video> -->
+        <video controls class="video-player" [src]="selectedLesson.videoUrl">
+          Seu navegador não suporta a tag de vídeo.
+        </video>
+        <div class="video-info">
+          <div class="video-meta">
+            <img src="https://placehold.co/40x40" alt="Instructor Icon" class="instructor-icon">
+            <div class="video-details">
+              <p>{{ selectedLesson.videoTitle }}</p>
+              <p>{{ selectedLesson.videoInstructor }}</p>
+            </div>
+          </div>
+          <div class="video-actions">
+            <span>Assistir m...</span>
+            <span>Compartilhar</span>
+          </div>
+        </div>
+      </div>
+      <div class="lesson-description">
+        <h3>About the Lesson</h3>
+        <p>⏰ {{ selectedLesson.duration }}</p>
+        <p>{{ selectedLesson.description }}</p>
+      </div>
+    </div>
+  </div>
+</div>

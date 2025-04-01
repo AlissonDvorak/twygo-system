@@ -120,17 +120,38 @@ async def remove_course(course_id: str):
     return {"message": "Curso, aulas e vídeos removidos com sucesso"}
 
 @router.get("/courses/{course_id}/video")
-async def get_video(course_id: str):
-    """Retorna o vídeo de um curso pelo GridFS"""
+async def get_video(course_id: str, lesson_id: str = None):
+    """
+    Retorna o vídeo de um curso ou de uma aula específica pelo GridFS.
+    - Se lesson_id for fornecido, retorna o vídeo da aula.
+    - Caso contrário, retorna o vídeo do curso.
+    """
+    # Verifica se o curso existe
     course = db.courses.find_one({"_id": ObjectId(course_id)})
-    if not course or "video_id" not in course:
-        raise HTTPException(status_code=404, detail="Vídeo não encontrado")
-    
-    try:
-        video_file = fs.get(ObjectId(course["video_id"]))
-        return StreamingResponse(video_file, media_type="video/mp4")
-    except gridfs.errors.NoFile:
-        raise HTTPException(status_code=404, detail="Arquivo de vídeo não encontrado no GridFS")
+    if not course:
+        raise HTTPException(status_code=404, detail="Curso não encontrado")
+
+    if lesson_id:
+        # Busca a aula específica
+        lesson = db.lessons.find_one({"_id": ObjectId(lesson_id), "course_id": ObjectId(course_id)})
+        if not lesson or "video_id" not in lesson:
+            raise HTTPException(status_code=404, detail="Vídeo da aula não encontrado")
+
+        try:
+            video_file = fs.get(ObjectId(lesson["video_id"]))
+            return StreamingResponse(video_file, media_type="video/mp4")
+        except gridfs.errors.NoFile:
+            raise HTTPException(status_code=404, detail="Arquivo de vídeo da aula não encontrado no GridFS")
+    else:
+        # Busca o vídeo do curso (comportamento original)
+        if "video_id" not in course:
+            raise HTTPException(status_code=404, detail="Vídeo do curso não encontrado")
+
+        try:
+            video_file = fs.get(ObjectId(course["video_id"]))
+            return StreamingResponse(video_file, media_type="video/mp4")
+        except gridfs.errors.NoFile:
+            raise HTTPException(status_code=404, detail="Arquivo de vídeo do curso não encontrado no GridFS")
     
 @router.post("/courses/{course_id}/lessons/")
 async def add_lesson(
