@@ -1,9 +1,129 @@
 <header class="top-menu">
-    <div class="logo">
-      <span class="icon">📖</span>
-      <span class="text">CourseHub</span>
-    </div>
-    <button class="new-course-btn" (click)="onNewCourse()">
-      <span class="plus-icon">+</span> New Course
-    </button>
-  </header>
+  <div class="logo">
+    <span class="icon">📖</span>
+    <span class="text">CourseHub</span>
+  </div>
+  <button class="new-course-btn" (click)="showModal()">
+    <span class="plus-icon">+</span> Novo Curso
+  </button>
+</header>
+
+<nz-modal
+  [(nzVisible)]="isVisible"
+  nzTitle="Criar Novo Curso"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="handleOk()"
+  [nzOkText]="'Criar Curso'"
+  [nzCancelText]="'Cancelar'"
+  [nzWidth]="600"
+  [nzBodyStyle]="{ padding: '0' }"
+  [nzOkLoading]="isLoading" 
+  [nzOkDisabled]="isLoading" 
+>
+  <ng-container *nzModalContent>
+    <nz-spin [nzSpinning]="isLoading" nzTip="Enviando curso...">
+      <div class="modal-content-wrapper">
+        <p class="modal-description">Adicione um novo curso à sua plataforma de aprendizado.</p>
+        <form class="course-form" (ngSubmit)="handleOk()">
+          <!-- Título -->
+          <div class="form-group">
+            <label for="title">Título do Curso</label>
+            <input
+              type="text"
+              id="title"
+              name="title"
+              [(ngModel)]="courseData.title"
+              placeholder="ex.: Introdução ao Desenvolvimento Web"
+              required
+              [disabled]="isLoading"
+            />
+          </div>
+
+          <!-- Descrição -->
+          <div class="form-group">
+            <label for="description">Descrição</label>
+            <textarea
+              id="description"
+              name="description"
+              [(ngModel)]="courseData.description"
+              placeholder="Forneça uma breve descrição do curso"
+              rows="3"
+              required
+              [disabled]="isLoading"
+            ></textarea>
+          </div>
+
+          <!-- URL da Imagem -->
+          <div class="form-group">
+            <label for="imageUrl">Imagem do Curso (URL, opcional)</label>
+            <input
+              type="url"
+              id="imageUrl"
+              name="imageUrl"
+              [(ngModel)]="courseData.imageUrl"
+              placeholder="ex.: https://exemplo.com/imagem.jpg"
+              [disabled]="isLoading"
+            />
+          </div>
+
+          <!-- Duração Estimada -->
+          <div class="form-group">
+            <label for="duration">Duração Estimada</label>
+            <input
+              type="text"
+              id="duration"
+              name="duration"
+              [(ngModel)]="courseData.duration"
+              placeholder="ex.: 8 horas"
+              required
+              [disabled]="isLoading"
+            />
+          </div>
+
+          <!-- Data de Término -->
+          <div class="form-group">
+            <label for="end_date">Data de Término</label>
+            <input
+              type="date"
+              id="end_date"
+              name="end_date"
+              [(ngModel)]="courseData.end_date"
+              required
+              [disabled]="isLoading"
+            />
+          </div>
+
+          <!-- Upload de Vídeo -->
+          <div class="form-group">
+            <label for="video">Vídeo do Curso</label>
+            <div
+              class="drop-area"
+              (drop)="handleVideoUpload($event)"
+              (dragover)="onDragOver($event)"
+              (dragleave)="onDragLeave($event)"
+              [class.disabled]="isLoading"
+            >
+              <div class="drop-area-content">
+                <span class="drop-icon">📤</span>
+                <p *ngIf="!videoFileName" class="drop-text">Arraste e solte o vídeo aqui ou clique para selecionar</p>
+                <p *ngIf="videoFileName" class="drop-text selected-file">Arquivo selecionado: {{ videoFileName }}</p>
+                <button type="button" class="select-file-btn" (click)="videoInput.click()" [disabled]="isLoading">
+                  Selecionar Arquivo
+                </button>
+              </div>
+              <input
+                type="file"
+                id="video"
+                accept="video/*"
+                (change)="handleVideoUpload($event)"
+                style="display: none"
+                #videoInput
+                [disabled]="isLoading"
+              />
+            </div>
+          </div>
+        </form>
+      </div>
+    </nz-spin>
+  </ng-container>
+</nz-modal>
