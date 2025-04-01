@@ -1,0 +1,151 @@
+<div class="reports-container">
+    <h1>Relatórios de Tamanho de Vídeo</h1>
+  
+    <!-- Filtros -->
+    <div class="filters">
+      <div class="filter-group">
+        <label for="courseId">ID do Curso</label>
+        <input
+          type="text"
+          id="courseId"
+          [(ngModel)]="filters.courseId"
+          placeholder="ex.: 67eb13d15fbcd42f37e9a1fb"
+          (input)="onFilterChange()"
+        />
+      </div>
+      <div class="filter-group">
+        <label for="lessonId">ID da Lição</label>
+        <input
+          type="text"
+          id="lessonId"
+          [(ngModel)]="filters.lessonId"
+          placeholder="ex.: 67eb13d15fbcd42f37e9a2fc"
+          [disabled]="!filters.courseId"
+          (input)="onFilterChange()"
+        />
+      </div>
+      <div class="filter-group">
+        <label for="scope">Escopo</label>
+        <select id="scope" [(ngModel)]="filters.scope" (change)="onFilterChange()">
+          <option value="">Todos</option>
+          <option value="intro">Vídeo Introdutório</option>
+          <option value="lessons">Apenas Lições</option>
+          <option value="full">Completo</option>
+        </select>
+      </div>
+      <button class="clear-btn" (click)="clearFilters()">Limpar Filtros</button>
+    </div>
+  
+    <!-- Área de Relatório -->
+    <div class="report-content" *ngIf="reportData">
+      <div class="summary">
+        <h2>{{ getReportTitle() }}</h2>
+        <p>Data de Geração: {{ reportData.generated_at | date:'dd/MM/yyyy HH:mm:ss' }}</p>
+        <p *ngIf="reportData.video_size_mb">Tamanho Total: {{ reportData.video_size_mb | number:'1.2-2' }} MB</p>
+      </div>
+  
+      <!-- Gráfico -->
+      <div class="chart-container">
+        <canvas #chartCanvas></canvas>
+      </div>
+  
+      <!-- Detalhes -->
+      <div class="details">
+        <ng-container [ngSwitch]="reportData.type">
+          <!-- Relatório de Lição Específica -->
+          <div *ngSwitchCase="'lesson'">
+            <table class="report-table">
+              <thead>
+                <tr>
+                  <th>Título</th>
+                  <th>Tamanho (MB)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{ reportData.title }}</td>
+                  <td>{{ reportData.video_size_mb | number:'1.2-2' }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+  
+          <!-- Relatório de Curso Específico -->
+          <div *ngSwitchCase="'course'">
+            <table class="report-table">
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Tamanho (MB)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="reportData.details.intro_video_size_mb">
+                  <td>Vídeo Introdutório</td>
+                  <td>{{ reportData.details.intro_video_size_mb | number:'1.2-2' }}</td>
+                </tr>
+                <tr *ngIf="reportData.details.lessons_size_mb">
+                  <td>Lições ({{ reportData.details.lessons_count }})</td>
+                  <td>{{ reportData.details.lessons_size_mb | number:'1.2-2' }}</td>
+                </tr>
+                <tr *ngIf="reportData.details.lessons?.length">
+                  <td colspan="2">
+                    <h3>Detalhamento das Lições</h3>
+                    <table class="sub-table">
+                      <thead>
+                        <tr>
+                          <th>ID</th>
+                          <th>Título</th>
+                          <th>Tamanho (MB)</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let lesson of reportData.details.lessons">
+                          <td>{{ lesson.id }}</td>
+                          <td>{{ lesson.title }}</td>
+                          <td>{{ lesson.size_mb | number:'1.2-2' }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+  
+          <!-- Relatório Geral -->
+          <div *ngSwitchCase="'general'">
+            <table class="report-table" *ngIf="reportData.data?.length">
+              <thead>
+                <tr>
+                  <th>Curso</th>
+                  <th>Tamanho Total (MB)</th>
+                  <th>Vídeo Intro (MB)</th>
+                  <th>Lições (MB)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let course of reportData.data">
+                  <td>{{ course.course_title }}</td>
+                  <td>{{ course.total_size_mb | number:'1.2-2' }}</td>
+                  <td>{{ course.intro_video_size_mb | number:'1.2-2' }}</td>
+                  <td>{{ course.lessons | sumLessonSizes | number:'1.2-2' }}</td>
+                </tr>
+              </tbody>
+            </table>
+            <p *ngIf="!reportData.data?.length">{{ reportData.message }}</p>
+            <div *ngIf="reportData.details" class="general-details">
+              <h3>Resumo Geral</h3>
+              <p>Cursos: {{ reportData.details.courses_count }}</p>
+              <p>Tamanho Vídeos Introdutórios: {{ reportData.details.intro_videos_size_mb | number:'1.2-2' }} MB</p>
+              <p>Tamanho Lições: {{ reportData.details.lessons_size_mb | number:'1.2-2' }} MB</p>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  
+    <div *ngIf="isLoading" class="loading-overlay">
+      <nz-spin nzSimple [nzSize]="'large'"></nz-spin>
+    </div>
+  </div>
