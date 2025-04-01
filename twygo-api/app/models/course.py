@@ -17,7 +17,9 @@ class Course(BaseModel):
     end_date: datetime
     video_size_mb: Optional[float] = None
     video_id: Optional[str] = None
+    duration : Optional[float] = None
     transcript: Optional[str] = None
+    lessons_count: int = 0
 
 class CourseUpdate(BaseModel):
     title: Optional[str] = None

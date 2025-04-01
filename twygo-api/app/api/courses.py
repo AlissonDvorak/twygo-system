@@ -22,7 +22,8 @@ async def add_course(
     title: str = Form(...),
     description: str = Form(...),
     end_date: str = Form(...),
-    video: UploadFile = File(...)
+    video: UploadFile = File(...),
+    duration: float = Form(...),
 ):
     """Endpoint para cadastrar um curso, salvar vídeo no MongoDB GridFS e transcrever o áudio"""
     
@@ -50,8 +51,10 @@ async def add_course(
         description=description,
         end_date=datetime.strptime(end_date, "%Y-%m-%d"),
         transcript=result["text"],
+        duration=duration,
         video_size_mb=video_size_mb,
-        video_id=str(video_id)
+        video_id=str(video_id),
+        lessons_count=0  # Inicializa explicitamente
     )
     
     # Remover arquivos temporários
@@ -63,6 +66,7 @@ async def add_course(
         "id": course_id,
         "message": "Curso criado com sucesso",
         "video_id": str(video_id),
+        "duration": duration,
         "transcription": result["text"]
     }
 
@@ -182,7 +186,7 @@ async def add_lesson(
     ffmpeg.input(video_path).output(audio_path, format="wav", ac=1, ar="16000").run(overwrite_output=True)
 
     model = whisper.load_model("small")
-    transcription_result = model.transcribe(audio_path)  # Renomeei para evitar conflito
+    transcription_result = model.transcribe(audio_path)
 
     # Criar a aula
     lesson_data = Lesson(
@@ -190,17 +194,21 @@ async def add_lesson(
         description=description,
         video_id=str(video_id),
         video_size_mb=video_size_mb,
-        transcript=transcription_result["text"] 
+        transcript=transcription_result["text"]
     ).dict()
 
     # Adicionar o course_id à aula
     lesson_data["course_id"] = ObjectId(course_id)
 
     # Inserir a aula na coleção lessons
-    insert_result = db.lessons.insert_one(lesson_data)  
-    
-    print(insert_result)
-    
+    insert_result = db.lessons.insert_one(lesson_data)
+
+    # Atualizar o lessons_count no curso
+    db.courses.update_one(
+        {"_id": ObjectId(course_id)},
+        {"$inc": {"lessons_count": 1}}  # Incrementa o campo lessons_count em 1
+    )
+
     # Remover arquivos temporários
     os.unlink(video_path)
     os.unlink(audio_path)
@@ -209,7 +217,7 @@ async def add_lesson(
         "id": str(insert_result.inserted_id),
         "message": "Aula adicionada com sucesso",
         "video_id": str(video_id),
-        "transcription": transcription_result["text"]  # Usando o resultado correto
+        "transcription": transcription_result["text"]
     }
 
 @router.get("/courses/{course_id}/lessons/")
@@ -247,5 +255,11 @@ async def remove_lesson(course_id: str, lesson_id: str):
     result = db.lessons.delete_one({"_id": ObjectId(lesson_id)})
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Lição não encontrada")
+
+    # Decrementar o lessons_count no curso
+    db.courses.update_one(
+        {"_id": ObjectId(course_id)},
+        {"$inc": {"lessons_count": -1}}  # Decrementa o campo lessons_count em 1
+    )
 
     return {"message": "Lição e vídeo associados removidos com sucesso"}

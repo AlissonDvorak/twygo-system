@@ -9,6 +9,7 @@ export interface Course {
   videoUrl?: string;
   instructor?: string;
   lessons?: any[] | number; 
+  lessonsCount?: number;
   duration?: string;
   imageUrl?: string;
 }

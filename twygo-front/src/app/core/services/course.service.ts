@@ -18,7 +18,7 @@ export class CourseService {
         return response.active_courses.map(course => ({
           ...course,
           instructor: course.instructor || 'Instrutor Desconhecido',
-          lessons: course.lessons || Math.floor(Math.random() * 10) + 5,
+          lessons: course.lessonsCount || 0,  // Usa lessons_count do backend
           duration: course.duration || `${Math.floor(Math.random() * 5) + 3} hours`,
           imageUrl: course.imageUrl || `https://placehold.co/300x200`
         }));
@@ -32,6 +32,7 @@ export class CourseService {
     formData.append('description', courseData.description);
     formData.append('end_date', courseData.end_date);
     formData.append('video', videoFile);
+    formData.append('duration', courseData.duration);
 
     return this.http.post(this.apiUrl, formData);
   }
@@ -41,7 +42,7 @@ export class CourseService {
       map(course => ({
         ...course,
         instructor: course.instructor || 'Instrutor Desconhecido',
-        lessonsCount: Array.isArray(course.lessons) ? course.lessons.length : course.lessons || Math.floor(Math.random() * 10) + 5,
+        lessonsCount: course.lessonsCount || 0,  // Usa lessons_count do backend
         duration: course.duration || `${Math.floor(Math.random() * 5) + 3} hours`,
         imageUrl: course.imageUrl || `https://placehold.co/350x300`,
         lessons: Array.isArray(course.lessons) ? course.lessons : []
