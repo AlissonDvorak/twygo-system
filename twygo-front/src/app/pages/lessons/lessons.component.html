@@ -5,7 +5,9 @@
     <a href="#" class="back-link" (click)="backToLessons()">← Back to Course</a>
     <h1 *ngIf="selectedLesson" class="lesson-title">Introduction to React: React Fundamentals</h1>
     <div class="course-info" *ngIf="!selectedLesson">
-      <img [src]="course?.imageUrl" alt="Course Image" class="course-image">
+      <video class="course-image" controls  [src]="course.videoUrl">
+        Seu navegador não suporta a tag de vídeo.
+      </video>
       <div class="course-details">
         <h1>{{ course?.title }}</h1>
         <p>{{ course?.description }}</p>
@@ -20,7 +22,6 @@
 
   <!-- Lessons Section -->
   <div class="lessons-section">
-    <!-- Exibe a lista de lições se nenhuma aula estiver selecionada -->
     <div *ngIf="!selectedLesson">
       <div class="lessons-header">
         <h2>Lessons</h2>
@@ -42,7 +43,6 @@
     <!-- Exibe o conteúdo da aula selecionada -->
     <div *ngIf="selectedLesson" class="lesson-content">
       <div class="video-section">
-        <!-- Substitui a tag <img> por <video> -->
         <video controls class="video-player" [src]="selectedLesson.videoUrl">
           Seu navegador não suporta a tag de vídeo.
         </video>

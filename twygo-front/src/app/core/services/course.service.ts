@@ -1,4 +1,3 @@
-// course.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -50,11 +49,14 @@ export class CourseService {
     );
   }
 
-  // Ajusta o método para aceitar um lessonId opcional
-  getCourseVideo(courseId: string, lessonId?: string): string {
-    if (lessonId) {
-      return `${this.apiUrl}${courseId}/video?lesson_id=${lessonId}`;
-    }
+  // Novo método para buscar o vídeo do curso
+  getCourseVideo(courseId: string): string {
+    console.log('URL do vídeo:', `${this.apiUrl}${courseId}/video`);
     return `${this.apiUrl}${courseId}/video`;
   }
+
+  
+  
+
+
 }

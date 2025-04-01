@@ -1,4 +1,3 @@
-// lessons.component.ts
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -37,7 +36,7 @@ export class LessonsComponent implements OnInit {
             duration: course.duration,
             instructor: course.instructor,
             imageUrl: course.imageUrl,
-            videoUrl: this.courseService.getCourseVideo(courseId) // Vídeo do curso (fallback)
+            videoUrl: this.courseService.getCourseVideo(courseId) 
           };
         },
         error: (err: any) => {
@@ -55,14 +54,10 @@ export class LessonsComponent implements OnInit {
             title: lesson.title,
             description: lesson.description,
             duration: lesson.duration,
-            videoUrl: lesson._id ? this.courseService.getCourseVideo(courseId, lesson._id) : this.courseService.getCourseVideo(courseId), // Usa o vídeo da lição ou do curso
+            videoUrl: this.courseService.getCourseVideo(courseId), 
             thumbnail: lesson.thumbnail,
             videoTitle: lesson.videoTitle,
-            videoInstructor: lesson.videoInstructor,
-            video_id: lesson.video_id,
-            video_size_mb: lesson.video_size_mb,
-            transcript: lesson.transcript,
-            created_at: lesson.created_at
+            videoInstructor: lesson.videoInstructor
           }));
         },
         error: (err: any) => {
@@ -84,13 +79,5 @@ export class LessonsComponent implements OnInit {
 
   addLesson() {
     console.log('Add Lesson clicked!');
-  }
-
-  onVideoError(event: any) {
-    console.error('Erro ao carregar o vídeo:', event);
-    // Fallback para o vídeo do curso se o vídeo da lição falhar
-    if (this.selectedLesson && this.selectedLesson.videoUrl !== this.course.videoUrl) {
-      this.selectedLesson.videoUrl = this.course.videoUrl;
-    }
   }
 }

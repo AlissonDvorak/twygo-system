@@ -20,7 +20,7 @@ export class LessonsService {
         title: lesson.title || 'Untitled Lesson',
         description: lesson.description || 'No description available.',
         duration: lesson.duration || '40 minutes',
-        videoUrl: lesson.videoUrl || '', // Será preenchido no LessonsComponent
+        videoUrl: lesson.videoUrl || '', 
         thumbnail: lesson.thumbnail || 'https://placehold.co/800x450',
         videoTitle: lesson.videoTitle || `${lesson.title || 'Lesson'} Video`,
         videoInstructor: lesson.videoInstructor || 'Assistir no YouTube',
