@@ -14,7 +14,7 @@
   .chat-toggle {
     width: 50px;
     height: 50px;
-    background-color: #007bff;
+    background-color: #482ce8;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -25,7 +25,7 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   
     &:hover {
-      background-color: #0056b3;
+      background-color: #3f27cc;
     }
   }
   
@@ -41,7 +41,7 @@
   }
   
   .chat-header {
-    background-color: #007bff;
+    background-color: #482ce8;
     color: white;
     padding: 10px;
     text-align: center;
@@ -66,7 +66,7 @@
     word-wrap: break-word;
   
     &.user {
-      background-color: #007bff;
+      background-color: #482ce8;
       color: white;
       align-self: flex-end;
     }
@@ -125,14 +125,14 @@
   
     button {
       padding: 5px 10px;
-      background-color: #007bff;
+      background-color: #482ce8;
       color: white;
       border: none;
       border-radius: 4px;
       cursor: pointer;
   
       &:hover {
-        background-color: #0056b3;
+        background-color: #3d26c0;
       }
   
       &:disabled {

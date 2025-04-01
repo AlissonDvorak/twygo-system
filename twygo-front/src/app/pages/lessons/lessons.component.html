@@ -1,9 +1,8 @@
-<!-- lessons.component.html -->
 <div class="course-container">
   <!-- Header Section -->
   <div class="header">
-    <a href="#" class="back-link" (click)="backToLessons()">← Back to Course</a>
-    <h1 *ngIf="selectedLesson" class="lesson-title">Introduction to React: React Fundamentals</h1>
+    <a href="#" class="back-link" (click)="backToLessons()">← Voltar aos Cursos</a>
+    <h1 *ngIf="selectedLesson" class="lesson-title">{{ selectedLesson.title }}</h1>
     <div class="course-info" *ngIf="!selectedLesson && course">
       <video class="course-image" controls [src]="course.videoUrl">
         Seu navegador não suporta a tag de vídeo.
@@ -23,8 +22,8 @@
   <div class="lessons-section">
     <div *ngIf="!selectedLesson">
       <div class="lessons-header">
-        <h2>Lessons</h2>
-        <button (click)="addLesson()" class="add-lesson-btn">+ Add Lesson</button>
+        <h2>LIÇÕES</h2>
+        <button (click)="showAddLessonModal()" class="add-lesson-btn">+ Add Lesson</button>
       </div>
       <div class="lessons-list">
         <div *ngFor="let lesson of lessons" class="lesson-card" (click)="selectLesson(lesson)">
@@ -69,3 +68,85 @@
 </div>
 
 <app-chat *ngIf="courseId" [courseId]="courseId" [lessonId]="selectedLesson?._id"></app-chat>
+
+
+<nz-modal
+  [(nzVisible)]="isModalVisible"
+  nzTitle="Criar Novo Curso"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="handleOk()"
+  [nzOkText]="'Criar Aula'"
+  [nzCancelText]="'Cancelar'"
+  [nzWidth]="600"
+  [nzBodyStyle]="{ padding: '0' }"
+  [nzOkLoading]="isLoading"
+  [nzOkDisabled]="isLoading"
+>
+  <ng-container *nzModalContent>
+    <nz-spin [nzSpinning]="isLoading" nzTip="Enviando aula...">
+      <div class="modal-content-wrapper">
+        <p class="modal-description">Adicione uma nova aula ao curso.</p>
+        <form class="lesson-form" (ngSubmit)="handleOk()">
+
+          <div class="form-group">
+            <label for="title">Título da Aula</label>
+            <input
+              type="text"
+              id="title"
+              name="title"
+              [(ngModel)]="lessonData.title"
+              placeholder="ex.: Fundamentos de React"
+              required
+              [disabled]="isLoading"
+            />
+          </div>
+
+
+          <div class="form-group">
+            <label for="description">Descrição</label>
+            <textarea
+              id="description"
+              name="description"
+              [(ngModel)]="lessonData.description"
+              placeholder="Forneça uma breve descrição da aula"
+              rows="3"
+              required
+              [disabled]="isLoading"
+            ></textarea>
+          </div>
+
+
+          <div class="form-group">
+            <label for="video">Vídeo da Aula</label>
+            <div
+              class="drop-area"
+              (drop)="handleVideoUpload($event)"
+              (dragover)="onDragOver($event)"
+              (dragleave)="onDragLeave($event)"
+              [class.disabled]="isLoading"
+            >
+              <div class="drop-area-content">
+                <span class="drop-icon">📤</span>
+                <p *ngIf="!videoFileName" class="drop-text">Arraste e solte o vídeo aqui ou clique para selecionar</p>
+                <p *ngIf="videoFileName" class="drop-text selected-file">Arquivo selecionado: {{ videoFileName }}</p>
+                <button type="button" class="select-file-btn" (click)="videoInput.click()" [disabled]="isLoading">
+                  Selecionar Arquivo
+                </button>
+              </div>
+              <input
+                type="file"
+                id="video"
+                accept="video/*"
+                (change)="handleVideoUpload($event)"
+                style="display: none"
+                #videoInput
+                [disabled]="isLoading"
+              />
+            </div>
+          </div>
+        </form>
+      </div>
+    </nz-spin>
+  </ng-container>
+</nz-modal> 
+

@@ -1,4 +1,3 @@
-// lessons.service.ts
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -20,7 +19,7 @@ export class LessonsService {
         title: lesson.title || 'Untitled Lesson',
         description: lesson.description || 'No description available.',
         duration: lesson.duration || '40 minutes',
-        videoUrl: lesson.videoUrl || '', 
+        videoUrl: lesson.videoUrl || '',
         thumbnail: lesson.thumbnail || 'https://placehold.co/800x450',
         videoTitle: lesson.videoTitle || `${lesson.title || 'Lesson'} Video`,
         videoInstructor: lesson.videoInstructor || 'Assistir no YouTube',
@@ -30,5 +29,14 @@ export class LessonsService {
         created_at: lesson.created_at || ''
       })))
     );
+  }
+
+  addLesson(courseId: string, lessonData: { title: string; description: string; videoFile: File }): Observable<any> {
+    const formData = new FormData();
+    formData.append('title', lessonData.title);
+    formData.append('description', lessonData.description);
+    formData.append('video', lessonData.videoFile);
+
+    return this.http.post(`${this.apiUrl}${courseId}/lessons/`, formData);
   }
 }

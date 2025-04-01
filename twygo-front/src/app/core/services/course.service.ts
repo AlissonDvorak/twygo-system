@@ -50,7 +50,7 @@ export class CourseService {
   }
 
   // Novo método para buscar o vídeo do curso
-  getCourseVideo(courseId: string): string {
+  getCourseVideo(courseId: any): string {
     console.log('URL do vídeo:', `${this.apiUrl}${courseId}/video`);
     return `${this.apiUrl}${courseId}/video`;
   }

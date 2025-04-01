@@ -1,8 +1,6 @@
 <!-- courses.component.html -->
 <div class="container">
-  <h1>Courses</h1>
-  <a href="#" class="browse-link">Browse all available courses</a>
-
+  <h1>CURSOS</h1>
   <div class="course-grid">
     <div class="course-card" *ngFor="let course of courses" (click)="redirectToCourse(course._id)">
       <!-- Exibe o vídeo se videoUrl estiver disponível, caso contrário, exibe a imagem -->
