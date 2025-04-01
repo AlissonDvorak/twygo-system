@@ -39,4 +39,8 @@ export class LessonsService {
 
     return this.http.post(`${this.apiUrl}${courseId}/lessons/`, formData);
   }
+
+  deleteLesson(courseId: string, lessonId: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}${courseId}/lessons/${lessonId}`);
+  }
 }

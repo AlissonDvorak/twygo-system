@@ -26,14 +26,19 @@
         <button (click)="showAddLessonModal()" class="add-lesson-btn">+ Add Lesson</button>
       </div>
       <div class="lessons-list">
-        <div *ngFor="let lesson of lessons" class="lesson-card" (click)="selectLesson(lesson)">
+        <div *ngFor="let lesson of lessons" class="lesson-card">
           <span class="lesson-number">{{ lesson.id }}</span>
-          <div class="lesson-info">
+          <div class="lesson-info" (click)="selectLesson(lesson)">
             <h3>{{ lesson.title }}</h3>
             <p>{{ lesson.description }}</p>
             <p>{{ lesson.duration }}</p>
           </div>
-          <span class="play-icon">▶</span>
+          <span class="play-icon" (click)="selectLesson(lesson)">▶</span>
+          <!-- Ícone de engrenagem e menu -->
+          <div class="settings-icon" (click)="toggleSettingsMenu(lesson._id, $event)">⚙️</div>
+          <div class="settings-menu" *ngIf="selectedLessonId === lesson._id">
+            <button (click)="deleteLesson(lesson._id)">Excluir</button>
+          </div>
         </div>
       </div>
     </div>
@@ -69,7 +74,7 @@
 
 <app-chat *ngIf="courseId" [courseId]="courseId" [lessonId]="selectedLesson?._id"></app-chat>
 
-
+<!-- Modal de Criação de Aula (sem alterações) -->
 <nz-modal
   [(nzVisible)]="isModalVisible"
   nzTitle="Criar Novo Curso"
@@ -87,7 +92,6 @@
       <div class="modal-content-wrapper">
         <p class="modal-description">Adicione uma nova aula ao curso.</p>
         <form class="lesson-form" (ngSubmit)="handleOk()">
-
           <div class="form-group">
             <label for="title">Título da Aula</label>
             <input
@@ -100,8 +104,6 @@
               [disabled]="isLoading"
             />
           </div>
-
-
           <div class="form-group">
             <label for="description">Descrição</label>
             <textarea
@@ -114,8 +116,6 @@
               [disabled]="isLoading"
             ></textarea>
           </div>
-
-
           <div class="form-group">
             <label for="video">Vídeo da Aula</label>
             <div
@@ -148,5 +148,4 @@
       </div>
     </nz-spin>
   </ng-container>
-</nz-modal> 
-
+</nz-modal>

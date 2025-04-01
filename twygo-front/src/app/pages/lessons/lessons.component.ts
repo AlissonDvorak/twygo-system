@@ -23,23 +23,13 @@ export class LessonsComponent implements OnInit {
   isModalVisible = false;
   isLoading = false;
   videoFileName: string | null = null;
+  selectedLessonId: string | null = null; 
 
   lessonData = {
     title: '',
     description: '',
     videoFile: null as File | null
   };
-
-  courseData = {
-    title: '',
-    description: '',
-    instructor: '',
-    imageUrl: '',
-    duration: '',
-    end_date: '',
-    videoFile: null as File | null
-  };
-
 
   constructor(
     private route: ActivatedRoute,
@@ -80,7 +70,6 @@ export class LessonsComponent implements OnInit {
 
   backToLessons() {
     this.selectedLesson = null;
-    
   }
 
   showAddLessonModal() {
@@ -94,7 +83,6 @@ export class LessonsComponent implements OnInit {
     }
 
     this.isLoading = true;
-    // Como isFormValid() garante que videoFile não é null, podemos usar ! para afirmar isso ao TypeScript
     const lessonDataToSend = {
       title: this.lessonData.title,
       description: this.lessonData.description,
@@ -187,5 +175,26 @@ export class LessonsComponent implements OnInit {
         console.error('Erro ao buscar lições:', err);
       }
     });
+  }
+
+  toggleSettingsMenu(lessonId: string, event: Event): void {
+    event.stopPropagation(); 
+    this.selectedLessonId = this.selectedLessonId === lessonId ? null : lessonId;
+  }
+
+  deleteLesson(lessonId: string): void {
+    if (confirm('Tem certeza que deseja excluir esta aula?')) {
+      this.lessonsService.deleteLesson(this.courseId!, lessonId).subscribe({
+        next: (response) => {
+          console.log('Aula excluída:', response);
+          this.loadLessons(); 
+          this.selectedLessonId = null; 
+        },
+        error: (error) => {
+          console.error('Erro ao excluir aula:', error);
+          alert('Ocorreu um erro ao excluir a aula.');
+        }
+      });
+    }
   }
 }
