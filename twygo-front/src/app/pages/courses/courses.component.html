@@ -1,0 +1,22 @@
+
+<div class="container">
+  <h1>Courses</h1>
+  <a href="#" class="browse-link">Browse all available courses</a>
+
+  <div class="course-grid">
+    <div class="course-card" *ngFor="let course of courses">
+      <img [src]="course.imageUrl" alt="{{ course.title }}" class="course-image" />
+      <div class="course-info">
+        <h3>{{ course.title }}</h3>
+        <p class="instructor">{{ course.instructor }}</p>
+        <p class="description">{{ course.description }}</p>
+        <div class="course-details">
+          <span class="lessons"><i class="fas fa-book"></i> {{ course.lessons }} lessons</span>
+          <span class="duration">{{ course.duration }}</span>
+        </div>
+        <p class="extra-info">Video Size: {{ course.video_size_mb  }} MB</p>
+        <p class="extra-info">Ends on: {{ course.end_date }}</p>
+      </div>
+    </div>
+  </div>
+</div>

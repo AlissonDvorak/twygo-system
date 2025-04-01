@@ -1,0 +1,96 @@
+$primary-color: #1a2b49;
+$secondary-color: #007bff;
+$text-color: #333;
+$muted-color: #666;
+$shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+$border-radius: 10px;
+$transition: all 0.2s ease;
+
+.container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  h1 {
+    font-size: 2.5rem;
+    color: $primary-color;
+    margin-bottom: 10px;
+  }
+
+  .browse-link {
+    color: $secondary-color;
+    text-decoration: none;
+    font-size: 1rem;
+    margin-bottom: 20px;
+    display: inline-block;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.course-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.course-card {
+  background: #fff;
+  border-radius: $border-radius;
+  box-shadow: $shadow;
+  overflow: hidden;
+  transition: $transition;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
+
+  .course-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+
+  .course-info {
+    padding: 15px;
+
+    h3 {
+      font-size: 1.25rem;
+      margin: 0 0 5px;
+      color: $primary-color;
+    }
+
+    .instructor {
+      font-size: 0.9rem;
+      color: $muted-color;
+      margin: 0 0 10px;
+    }
+
+    .description {
+      font-size: 0.95rem;
+      color: $text-color;
+      margin: 0 0 15px;
+    }
+
+    .course-details {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      color: $muted-color;
+
+      .lessons {
+        i {
+          margin-right: 5px;
+        }
+      }
+    }
+
+    .extra-info {
+      font-size: 0.85rem;
+      color: $muted-color;
+      margin: 5px 0 0;
+    }
+  }
+}
