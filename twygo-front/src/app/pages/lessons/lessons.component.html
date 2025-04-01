@@ -4,8 +4,8 @@
   <div class="header">
     <a href="#" class="back-link" (click)="backToLessons()">← Back to Course</a>
     <h1 *ngIf="selectedLesson" class="lesson-title">Introduction to React: React Fundamentals</h1>
-    <div class="course-info" *ngIf="!selectedLesson">
-      <video class="course-image" controls  [src]="course.videoUrl">
+    <div class="course-info" *ngIf="!selectedLesson && course">
+      <video class="course-image" controls [src]="course.videoUrl">
         Seu navegador não suporta a tag de vídeo.
       </video>
       <div class="course-details">
@@ -13,9 +13,8 @@
         <p>{{ course?.description }}</p>
         <div class="course-meta">
           <span>📖 {{ course?.lessonsCount }} lessons</span>
-          <span>⏰ {{ course?.duration }}</span>
+          <span>⏰ {{ course?.duration }} horas</span>
         </div>
-        <p>Instructor: {{ course?.instructor }}</p>
       </div>
     </div>
   </div>
@@ -68,3 +67,5 @@
     </div>
   </div>
 </div>
+
+<app-chat *ngIf="courseId" [courseId]="courseId" [lessonId]="selectedLesson?._id"></app-chat>

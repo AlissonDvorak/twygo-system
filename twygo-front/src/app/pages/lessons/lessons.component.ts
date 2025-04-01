@@ -3,11 +3,12 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CourseService } from '../../core/services/course.service';
 import { LessonsService } from '../../core/services/lessons.service';
+import { ChatComponent } from '../../shared/chat/chat.component';
 
 @Component({
   selector: 'app-lessons',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,  ChatComponent],
   templateUrl: './lessons.component.html',
   styleUrls: ['./lessons.component.scss']
 })
@@ -15,6 +16,7 @@ export class LessonsComponent implements OnInit {
   course: any = null;
   lessons: any[] = [];
   selectedLesson: any = null;
+  courseId: any
 
   constructor(
     private route: ActivatedRoute,
@@ -24,7 +26,11 @@ export class LessonsComponent implements OnInit {
 
   ngOnInit() {
     const courseId = this.route.snapshot.paramMap.get('id');
+    this.courseId = courseId
     console.log('Course ID from route:', courseId);
+    setTimeout(() => {
+      
+    }, 300);
     if (courseId) {
       // Busca os dados do curso
       this.courseService.getCourseById(courseId).subscribe({

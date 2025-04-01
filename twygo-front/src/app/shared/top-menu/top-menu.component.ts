@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { NzModalModule } from 'ng-zorro-antd/modal';
-import { NzSpinModule } from 'ng-zorro-antd/spin'; // Importe o NzSpinModule
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { FormsModule } from '@angular/forms';
 import { CourseService } from '../../core/services/course.service';
+import { Router } from '@angular/router'; // Importe o Router
 
 @Component({
   selector: 'app-top-menu',
@@ -28,7 +29,15 @@ export class TopMenuComponent {
 
   videoFileName: string | null = null;
 
-  constructor(private courseService: CourseService) {}
+  constructor(
+    private courseService: CourseService,
+    private router: Router // Injete o Router
+  ) {}
+
+  // Método para verificar se a URL atual é '/courses'
+  isCoursesPage(): boolean {
+    return this.router.url === '/courses';
+  }
 
   showModal(): void {
     console.log('Button clicked!');
@@ -39,7 +48,7 @@ export class TopMenuComponent {
     this.isLoading = true;
     if (!this.courseData.title || !this.courseData.description || !this.courseData.end_date || !this.courseData.videoFile) {
       alert('Por favor, preencha todos os campos obrigatórios e selecione um vídeo.');
-      this.isLoading = false; 
+      this.isLoading = false;
       return;
     }
 

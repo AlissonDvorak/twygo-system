@@ -1,1 +1,36 @@
-<p>chat works!</p>
+<div class="chat-container" [class.minimized]="isMinimized">
+    <!-- Botão de minimizar/expandir -->
+    <div class="chat-toggle" (click)="toggleChat()" *ngIf="isMinimized" >
+      <span class="chat-icon" >💬</span>
+      
+    </div>
+  
+    <!-- Janela de chat (visível apenas quando não minimizada) -->
+    <div class="chat-window" *ngIf="!isMinimized">
+      <div class="chat-header" (click)="toggleChat()">
+        <span>Chat com o Curso</span>
+        <span class="minimize-icon" *ngIf="!isMinimized">−</span>
+      </div>
+      <div class="chat-messages" #messageContainer>
+        <div *ngFor="let message of messages" class="message" [class.user]="message.isUser">
+          {{ message.text }}
+        </div>
+        <!-- Animação de "digitando" enquanto espera resposta -->
+        <div class="typing-indicator" *ngIf="isLoading">
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
+      </div>
+      <div class="chat-input">
+        <input
+          type="text"
+          [(ngModel)]="userMessage"
+          (keyup.enter)="sendMessage()"
+          placeholder="Digite sua pergunta..."
+          [disabled]="isLoading"
+        />
+        <button (click)="sendMessage()" [disabled]="isLoading">Enviar</button>
+      </div>
+    </div>
+  </div>

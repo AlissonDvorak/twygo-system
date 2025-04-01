@@ -1,23 +1,20 @@
-// courses.component.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TopMenuComponent } from '../../shared/top-menu/top-menu.component';
 import { Course } from '../../models/course.model';
 import { CourseService } from '../../core/services/course.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ChatComponent } from '../../shared/chat/chat.component';
 
 @Component({
   selector: 'app-courses',
   templateUrl: './courses.component.html',
   styleUrls: ['./courses.component.scss'],
   standalone: true,
-  imports: [
-    CommonModule,
-    TopMenuComponent
-  ]
+  imports: [CommonModule, TopMenuComponent]
 })
 export class CoursesComponent implements OnInit {
-  courses: Course[] = []; // Ajusta para um array de cursos
+  courses: Course[] = [];
 
   constructor(
     private courseService: CourseService,
@@ -32,10 +29,9 @@ export class CoursesComponent implements OnInit {
   loadCourses(): void {
     this.courseService.getCourses().subscribe({
       next: (courses: Course[]) => {
-        // Mapeia os cursos para incluir a propriedade videoUrl
         this.courses = courses.map((course: any) => ({
           ...course,
-          videoUrl: this.courseService.getCourseVideo(course._id) // Adiciona a URL do vídeo
+          videoUrl: this.courseService.getCourseVideo(course._id)
         }));
       },
       error: (error) => {
@@ -45,13 +41,16 @@ export class CoursesComponent implements OnInit {
   }
 
   redirectToCourse(courseId: any): void {
-    // Passa o courseId como parte da URL
     this.router.navigate([`/lessons/${courseId}`]);
   }
 
   onVideoError(event: any, course: Course) {
     console.error('Erro ao carregar o vídeo:', event);
-    course.videoUrl = ''; // Remove a URL do vídeo para evitar tentativas repetidas
-    course.imageUrl = course.imageUrl || 'https://placehold.co/300x200'; // Garante que imageUrl exista
+    course.videoUrl = '';
+    course.imageUrl = course.imageUrl || 'https://placehold.co/300x200';
+  }
+
+  setVideoToStart(video: HTMLVideoElement): void {
+    video.currentTime = 0; // Define o tempo do vídeo como 0 (primeiro frame)
   }
 }

@@ -3,7 +3,11 @@
     <span class="icon">📖</span>
     <span class="text">CourseHub</span>
   </div>
-  <button class="new-course-btn" (click)="showModal()">
+  <button
+    class="new-course-btn"
+    *ngIf="isCoursesPage()"
+    (click)="showModal()"
+  >
     <span class="plus-icon">+</span> Novo Curso
   </button>
 </header>
@@ -17,8 +21,8 @@
   [nzCancelText]="'Cancelar'"
   [nzWidth]="600"
   [nzBodyStyle]="{ padding: '0' }"
-  [nzOkLoading]="isLoading" 
-  [nzOkDisabled]="isLoading" 
+  [nzOkLoading]="isLoading"
+  [nzOkDisabled]="isLoading"
 >
   <ng-container *nzModalContent>
     <nz-spin [nzSpinning]="isLoading" nzTip="Enviando curso...">

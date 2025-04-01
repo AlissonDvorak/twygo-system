@@ -7,7 +7,15 @@
     <div class="course-card" *ngFor="let course of courses" (click)="redirectToCourse(course._id)">
       <!-- Exibe o vídeo se videoUrl estiver disponível, caso contrário, exibe a imagem -->
       <ng-container *ngIf="course.videoUrl; else imageFallback">
-        <video class="course-image" controls [src]="course.videoUrl" [poster]="course.imageUrl" (error)="onVideoError($event, course)">
+        <video
+          #videoPlayer
+          class="course-image"
+          controls
+          [src]="course.videoUrl"
+          [poster]="course.imageUrl"
+          (loadedmetadata)="setVideoToStart(videoPlayer)"
+          (error)="onVideoError($event, course)"
+        >
           Seu navegador não suporta a tag de vídeo.
         </video>
       </ng-container>
@@ -16,14 +24,15 @@
       </ng-template>
       <div class="course-info">
         <h3>{{ course.title }}</h3>
-        <p class="instructor">{{ course.instructor }}</p>
         <p class="description">{{ course.description }}</p>
         <div class="course-details">
           <span class="lessons"><i class="fas fa-book"></i> {{ course.lessons }} lessons</span>
-          <span class="duration">{{ course.duration }}</span>
+          <span class="duration">{{ course.duration }} horas</span>
+          <span>Valido: {{ course.end_date | date:'dd/MM/yy' }}</span>
         </div>
-        <p class="extra-info">Ends on: {{ course.end_date | date:'mediumDate' }}</p>
+        
       </div>
     </div>
   </div>
 </div>
+
