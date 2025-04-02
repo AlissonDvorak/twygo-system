@@ -8,6 +8,7 @@ client = OpenAI(
 )
 
 def ask_chatbot(prompt: str):
+    print(os.getenv("OPENAI_API_KEY"))
     """
     Função que interage com a API da OpenAI para gerar respostas.
     O chatbot atua como assistente de professor, usando o contexto fornecido no prompt.
