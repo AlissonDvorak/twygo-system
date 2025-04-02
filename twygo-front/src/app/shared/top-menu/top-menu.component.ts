@@ -37,6 +37,9 @@ export class TopMenuComponent {
   isCoursesPage(): boolean {
     return this.router.url === '/courses';
   }
+  isReportPage(): boolean {
+    return this.router.url !== '/reports';
+  }
 
   showModal(): void {
     this.isVisible = true;
@@ -114,5 +117,10 @@ export class TopMenuComponent {
       videoFile: null
     };
     this.videoFileName = null;
+  }
+
+
+  goToReports(): void {
+    this.router.navigate(['/reports']);
   }
 }
