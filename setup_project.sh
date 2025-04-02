@@ -17,6 +17,7 @@ touch $PROJECT_NAME/app/main.py
 # Criar arquivos na raiz
 touch $PROJECT_NAME/.env
 touch $PROJECT_NAME/requirements.txt
+touch $PROJECT_NAME/system_requirements.txt
 touch $PROJECT_NAME/Dockerfile
 touch $PROJECT_NAME/README.md
 

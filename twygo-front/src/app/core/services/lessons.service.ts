@@ -3,12 +3,13 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Lesson } from '../../models/lesson.model';
+import { environment } from '../../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LessonsService {
-  private apiUrl = 'http://localhost:8000/api/courses/';
+  private apiUrl = environment.apiUrl + 'courses/';
 
   constructor(private http: HttpClient) {}
 

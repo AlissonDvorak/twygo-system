@@ -1,0 +1,39 @@
+services:
+  backend:
+    build:
+      context: ./twygo-api
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=secret
+    depends_on:
+      - mongodb
+    volumes:
+      - ./twygo-api:/app  
+
+  frontend:
+    build:
+      context: ./twygo-front
+      dockerfile: Dockerfile
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+    environment:
+      - API_URL=http://127.0.0.1:8000/api/
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27018:27018"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=secret
+    volumes:
+      - mongo-data:/data/db
+    command: ["mongod", "--port", "27018"]
+
+volumes:
+  mongo-data:
