@@ -4,7 +4,7 @@ services:
       context: ./twygo-api
       dockerfile: Dockerfile
     ports:
-      - "8000:8000"
+      - "8999:8999"
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=secret
@@ -22,7 +22,7 @@ services:
     depends_on:
       - backend
     environment:
-      - API_URL=http://127.0.0.1:8000/api/
+      - API_URL=http://127.0.0.1:8999/api/
 
   mongodb:
     image: mongo:latest
