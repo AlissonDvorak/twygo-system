@@ -27,13 +27,13 @@ services:
   mongodb:
     image: mongo:latest
     ports:
-      - "27018:27018"
+      - "27099:27018"
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=secret
     volumes:
       - mongo-data:/data/db
-    command: ["mongod", "--port", "27018"]
+    command: ["mongod", "--port", "27099"]
 
 volumes:
   mongo-data:
