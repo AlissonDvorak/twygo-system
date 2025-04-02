@@ -29,7 +29,7 @@ load_dotenv(override=True)
 def get_db():
     username = os.getenv("MONGO_INITDB_ROOT_USERNAME", os.getenv("MONGO_USERNAME"))
     password = os.getenv("MONGO_INITDB_ROOT_PASSWORD", os.getenv("MONGO_PASSWORD"))
-    client = MongoClient(f"mongodb://{username}:{password}@mongodb:27018/")
+    client = MongoClient(f"mongodb://{username}:{password}@mongodb:27099/")
     db = client["twygo"]
     fs = gridfs.GridFS(db)
     return db, fs
