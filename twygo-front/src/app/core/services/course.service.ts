@@ -49,8 +49,10 @@ export class CourseService {
     );
   }
 
-  getCourseVideo(courseId: any): string {
-    // console.log('URL do vídeo:', `${this.apiUrl}${courseId}/video`);
+  getCourseVideo(courseId: any, lessonId?: any): string {
+    if (lessonId) {
+      return `${this.apiUrl}${courseId}/video?lesson_id=${lessonId}`;
+    }
     return `${this.apiUrl}${courseId}/video`;
   }
 

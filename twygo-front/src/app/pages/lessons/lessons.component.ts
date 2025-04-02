@@ -65,7 +65,7 @@ export class LessonsComponent implements OnInit {
   }
 
   selectLesson(lesson: any) {
-    this.selectedLesson = lesson;
+    this.selectedLesson = lesson;;
   }
 
   backToLessons() {
@@ -165,7 +165,7 @@ export class LessonsComponent implements OnInit {
           title: lesson.title,
           description: lesson.description,
           duration: lesson.duration,
-          videoUrl: lesson.videoUrl,
+          videoUrl: this.courseService.getCourseVideo(this.courseId, lesson._id,),
           thumbnail: lesson.thumbnail,
           videoTitle: lesson.videoTitle,
           videoInstructor: lesson.videoInstructor
