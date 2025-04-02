@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Course } from '../../models/course.model';
 import { environment } from '../../../environments/environment.development';
@@ -10,6 +10,8 @@ import { environment } from '../../../environments/environment.development';
 })
 export class CourseService {
   private apiUrl = environment.apiUrl + 'courses/';
+  private courseAddedSubject = new Subject<void>();
+  courseAdded$: Observable<void> = this.courseAddedSubject.asObservable();
 
 
   constructor(private http: HttpClient) {}
@@ -64,5 +66,9 @@ export class CourseService {
 
   deleteCourse(courseId: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}${courseId}`);
+  }
+
+  notifyCourseAdded(): void {
+    this.courseAddedSubject.next();
   }
 }

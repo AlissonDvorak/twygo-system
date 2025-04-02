@@ -4,7 +4,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { FormsModule } from '@angular/forms';
 import { CourseService } from '../../core/services/course.service';
-import { Router } from '@angular/router'; // Importe o Router
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-top-menu',
@@ -31,16 +31,14 @@ export class TopMenuComponent {
 
   constructor(
     private courseService: CourseService,
-    private router: Router // Injete o Router
+    private router: Router
   ) {}
 
-  // Método para verificar se a URL atual é '/courses'
   isCoursesPage(): boolean {
     return this.router.url === '/courses';
   }
 
   showModal(): void {
-    // console.log('Button clicked!');
     this.isVisible = true;
   }
 
@@ -54,10 +52,11 @@ export class TopMenuComponent {
 
     this.courseService.uploadCourse(this.courseData, this.courseData.videoFile!).subscribe({
       next: (response: any) => {
-        // console.log('Curso criado com sucesso:', response);
+        console.log('Curso criado com sucesso:', response);
         this.isVisible = false;
         this.resetForm();
         this.isLoading = false;
+        this.courseService.notifyCourseAdded(); // Notifica a adição do curso
       },
       error: (error: any) => {
         this.isLoading = false;
@@ -68,7 +67,6 @@ export class TopMenuComponent {
   }
 
   handleCancel(): void {
-    // console.log('Button cancel clicked!');
     this.isVisible = false;
     this.resetForm();
   }
