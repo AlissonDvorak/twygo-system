@@ -22,7 +22,7 @@ services:
     depends_on:
       - backend
     environment:
-      - API_URL=http://localhost:8999/api/
+      - API_URL=http://backend:8999/api/
 
   mongodb:
     image: mongo:latest
