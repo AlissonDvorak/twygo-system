@@ -2,11 +2,11 @@ from datetime import datetime
 import os
 from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 from fastapi.encoders import jsonable_encoder
-from app.models.course import Course, CourseUpdate, Lesson
-from app.services.course import create_course, get_active_courses, get_course_by_id, update_course, delete_course
+from src.models.course import Course, CourseUpdate, Lesson
+from src.services.course import create_course, get_active_courses, get_course_by_id, update_course, delete_course
 from fastapi.responses import StreamingResponse
 from bson import ObjectId
-from app.db.mongo import get_db
+from src.db.mongo import get_db
 import gridfs
 import tempfile
 import whisper

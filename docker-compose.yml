@@ -10,7 +10,8 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=secret
     depends_on:
       - mongodb
-
+    volumes:
+      - ./twygo-api:/app  
 
   frontend:
     build:

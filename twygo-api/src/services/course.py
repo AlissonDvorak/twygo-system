@@ -1,5 +1,5 @@
-from app.db.mongo import get_db
-from app.models.course import Course
+from src.db.mongo import get_db
+from src.models.course import Course
 from bson import ObjectId
 from datetime import datetime
 from fastapi.encoders import jsonable_encoder

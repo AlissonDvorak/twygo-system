@@ -1,6 +1,6 @@
 # reports.py
 from fastapi import APIRouter, HTTPException
-from app.db.mongo import get_db
+from src.db.mongo import get_db
 from bson import ObjectId
 from datetime import datetime
 from typing import Optional

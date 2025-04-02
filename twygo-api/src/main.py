@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.api import courses, chatbot, reports
+from src.api import courses, chatbot, reports
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="Twygo API", version="1.0")

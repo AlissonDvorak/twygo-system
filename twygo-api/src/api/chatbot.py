@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
-from app.services.chatbot import ask_chatbot
-from app.db.mongo import get_db
+from src.services.chatbot import ask_chatbot
+from src.db.mongo import get_db
 from bson import ObjectId
 
 router = APIRouter()
