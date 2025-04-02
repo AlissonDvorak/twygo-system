@@ -18,7 +18,7 @@ export class CourseService {
         return response.active_courses.map(course => ({
           ...course,
           instructor: course.instructor || 'Instrutor Desconhecido',
-          lessons: course.lessonsCount || 0,  // Usa lessons_count do backend
+          lessons: course.lessons_count || 0,
           duration: course.duration || `${Math.floor(Math.random() * 5) + 3} hours`,
           imageUrl: course.imageUrl || `https://placehold.co/300x200`
         }));
@@ -42,20 +42,19 @@ export class CourseService {
       map(course => ({
         ...course,
         instructor: course.instructor || 'Instrutor Desconhecido',
-        lessonsCount: course.lessonsCount || 0,  // Usa lessons_count do backend
+        lessonsCount: course.lessons_count || 0,  
         duration: course.duration || `${Math.floor(Math.random() * 5) + 3} hours`,
         imageUrl: course.imageUrl || `https://placehold.co/350x300`,
-        lessons: Array.isArray(course.lessons) ? course.lessons : []
       }))
     );
   }
 
   getCourseVideo(courseId: any): string {
-    console.log('URL do vídeo:', `${this.apiUrl}${courseId}/video`);
+    // console.log('URL do vídeo:', `${this.apiUrl}${courseId}/video`);
     return `${this.apiUrl}${courseId}/video`;
   }
 
-  updateCourse(courseId: string, courseData: Partial<Course>): Observable<any> {
+  updateCourse(courseId: any, courseData: Partial<Course>): Observable<any> {
     return this.http.put(`${this.apiUrl}${courseId}`, courseData);
   }
 

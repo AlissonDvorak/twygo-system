@@ -24,12 +24,12 @@ export class ChatComponent implements AfterViewInit, OnChanges {
 
   ngAfterViewInit() {
     this.scrollToBottom();
-    console.log('Chat iniciado para curso:', this.courseId, 'ou lição:', this.lessonId);
+    // console.log('Chat iniciado para curso:', this.courseId, 'ou lição:', this.lessonId);
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['lessonId'] && !changes['lessonId'].firstChange) {
-      console.log('Mudança detectada em lessonId:', this.lessonId);
+      // console.log('Mudança detectada em lessonId:', this.lessonId);
       this.resetChat();
     }
   }
@@ -63,7 +63,7 @@ export class ChatComponent implements AfterViewInit, OnChanges {
   }
 
   private resetChat() {
-    console.log('Resetando chat para a nova aula:', this.lessonId);
+    // console.log('Resetando chat para a nova aula:', this.lessonId);
     this.messages = [];
     this.userMessage = '';
   }

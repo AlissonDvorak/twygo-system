@@ -39,7 +39,7 @@ export class LessonsComponent implements OnInit {
 
   ngOnInit() {
     this.courseId = this.route.snapshot.paramMap.get('id');
-    console.log('Course ID from route:', this.courseId);
+    // console.log('Course ID from route:', this.courseId);
     if (this.courseId) {
       this.courseService.getCourseById(this.courseId).subscribe({
         next: (course: any) => {
@@ -91,7 +91,7 @@ export class LessonsComponent implements OnInit {
 
     this.lessonsService.addLesson(this.courseId!, lessonDataToSend).subscribe({
       next: (response) => {
-        console.log('Aula adicionada com sucesso:', response);
+        // console.log('Aula adicionada com sucesso:', response);
         this.isModalVisible = false;
         this.resetForm();
         this.isLoading = false;
@@ -186,7 +186,7 @@ export class LessonsComponent implements OnInit {
     if (confirm('Tem certeza que deseja excluir esta aula?')) {
       this.lessonsService.deleteLesson(this.courseId!, lessonId).subscribe({
         next: (response) => {
-          console.log('Aula excluída:', response);
+          // console.log('Aula excluída:', response);
           this.loadLessons(); 
           this.selectedLessonId = null; 
         },

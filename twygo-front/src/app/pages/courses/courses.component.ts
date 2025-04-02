@@ -20,6 +20,7 @@ export class CoursesComponent implements OnInit {
   selectedCourseId: string | null = null;
   isEditModalVisible = false;
   isLoading = false;
+  editCourse: any
   editCourseData: Partial<Course> = {
     title: '',
     description: '',
@@ -39,7 +40,9 @@ export class CoursesComponent implements OnInit {
   loadCourses(): void {
     this.courseService.getCourses().subscribe({
       next: (courses: Course[]) => {
+        // console.log(courses),
         this.courses = courses.map((course: any) => ({
+          
           ...course,
           videoUrl: this.courseService.getCourseVideo(course._id)
         }));
@@ -70,6 +73,8 @@ export class CoursesComponent implements OnInit {
   }
 
   openEditModal(course: Course): void {
+    this.editCourse = course
+    // console.log('Editando curso:', course);
     this.editCourseData = {
       title: course.title,
       description: course.description,
@@ -85,15 +90,17 @@ export class CoursesComponent implements OnInit {
   }
 
   saveEdit(): void {
+    // console.log('Editando curso:', this.selectedCourseId, this.editCourseData)
     if (!this.isEditFormValid()) {
       alert('Por favor, preencha todos os campos obrigatórios.');
       return;
     }
 
     this.isLoading = true;
-    this.courseService.updateCourse(this.selectedCourseId!, this.editCourseData).subscribe({
+    this.courseService.updateCourse(this.editCourse._id!, this.editCourseData).subscribe({
+      
       next: (response) => {
-        console.log('Curso atualizado:', response);
+        // console.log('Curso atualizado:', response);
         this.isEditModalVisible = false;
         this.isLoading = false;
         this.loadCourses(); // Recarrega os cursos
@@ -110,7 +117,7 @@ export class CoursesComponent implements OnInit {
     if (confirm('Tem certeza que deseja excluir este curso? Isso também excluirá todas as aulas associadas.')) {
       this.courseService.deleteCourse(courseId).subscribe({
         next: (response) => {
-          console.log('Curso excluído:', response);
+          // console.log('Curso excluído:', response);
           this.loadCourses(); // Recarrega os cursos
           this.selectedCourseId = null; // Fecha o menu
         },

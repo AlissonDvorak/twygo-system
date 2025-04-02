@@ -40,7 +40,7 @@ export class TopMenuComponent {
   }
 
   showModal(): void {
-    console.log('Button clicked!');
+    // console.log('Button clicked!');
     this.isVisible = true;
   }
 
@@ -54,7 +54,7 @@ export class TopMenuComponent {
 
     this.courseService.uploadCourse(this.courseData, this.courseData.videoFile!).subscribe({
       next: (response: any) => {
-        console.log('Curso criado com sucesso:', response);
+        // console.log('Curso criado com sucesso:', response);
         this.isVisible = false;
         this.resetForm();
         this.isLoading = false;
@@ -68,7 +68,7 @@ export class TopMenuComponent {
   }
 
   handleCancel(): void {
-    console.log('Button cancel clicked!');
+    // console.log('Button cancel clicked!');
     this.isVisible = false;
     this.resetForm();
   }

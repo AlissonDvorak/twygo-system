@@ -23,7 +23,7 @@
         <h3>{{ course.title }}</h3>
         <p class="description">{{ course.description }}</p>
         <div class="course-details">
-          <span class="lessons"><i class="fas fa-book"></i> {{ course.lessons }} lessons</span>
+          <span class="lessons"><i class="fas fa-book"></i> {{ course.lessons_count}} lessons</span>
           <span class="duration">{{ course.duration }} horas</span>
           <span>Valido: {{ course.end_date | date:'dd/MM/yy' }}</span>
         </div>

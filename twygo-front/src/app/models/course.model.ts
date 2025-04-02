@@ -8,8 +8,7 @@ export interface Course {
   video_id?: string; 
   videoUrl?: string;
   instructor?: string;
-  lessons?: any[] | number; 
-  lessonsCount?: number;
+  lessons_count?: number;
   duration?: string;
   imageUrl?: string;
 }
