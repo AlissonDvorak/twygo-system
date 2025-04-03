@@ -3,22 +3,22 @@
     <span class="icon">📖</span>
     <span class="text">CourseHub</span>
   </div>
-  <div style="display: flex; gap: 15px; flex-direction: row;">
-  <button
-    class="new-course-btn"
-    *ngIf="isReportPage()"
-    (click)="goToReports()"
-  >
-     Relatorios
-  </button>
-  <button
-    class="new-course-btn"
-    *ngIf="isCoursesPage()"
-    (click)="showModal()"
-  >
-    <span class="plus-icon">+</span> Novo Curso
-  </button>
-</div>
+  <div class="button-group">
+    <button
+      class="new-course-btn"
+      *ngIf="isReportPage()"
+      (click)="goToReports()"
+    >
+      Relatórios
+    </button>
+    <button
+      class="new-course-btn"
+      *ngIf="isCoursesPage()"
+      (click)="showModal()"
+    >
+      <span class="plus-icon">+</span> Novo Curso
+    </button>
+  </div>
 </header>
 
 <nz-modal

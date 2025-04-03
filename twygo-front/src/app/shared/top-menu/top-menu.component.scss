@@ -8,7 +8,6 @@ $text-color: #333;
 $border-color: #e8e8e8;
 $shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 
-// Estilizar o topo (mantido igual)
 .top-menu {
   display: flex;
   justify-content: space-between;
@@ -17,13 +16,14 @@ $shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   background-color: #fff;
   border-bottom: 1px solid $border-color;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  flex-wrap: wrap; // Permite que os itens quebrem em telas menores
 
   .logo {
     display: flex;
     align-items: center;
     font-size: 1.5rem;
     font-weight: bold;
-    color: #482ce8;
+    color: $primary-color;
 
     .icon {
       margin-right: 8px;
@@ -35,11 +35,17 @@ $shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
   }
 
+  .button-group {
+    display: flex;
+    gap: 15px;
+    flex-direction: row;
+  }
+
   .new-course-btn {
     display: flex;
     align-items: center;
     padding: 8px 16px;
-    background-color: #482ce8;
+    background-color: $primary-color;
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -54,11 +60,10 @@ $shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
     &:hover {
-      background-color: #482ce8;
+      background-color: darken($primary-color, 10%);
     }
   }
 }
-
 
 ::ng-deep {
   .ant-modal {
@@ -66,6 +71,8 @@ $shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     box-shadow: $shadow;
     font-family: 'Poppins', sans-serif;
+    width: 100%;
+    max-width: 600px;
   }
 
   .ant-spin {
@@ -74,7 +81,7 @@ $shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     align-items: center;
 
     .ant-spin-dot {
-      font-size: 32px; 
+      font-size: 32px;
     }
 
     .ant-spin-text {
@@ -97,7 +104,7 @@ $shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
 
   .ant-modal-body {
-    padding: 0 !important; // !important para sobrescrever o nzBodyStyle
+    padding: 0 !important;
   }
 
   .modal-content-wrapper {
@@ -204,9 +211,6 @@ $shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
   }
 
-
-  
-
   .ant-modal-footer {
     border-top: none;
     padding: 16px 32px;
@@ -240,6 +244,195 @@ $shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
           background-color: darken($primary-color, 10%);
           border-color: darken($primary-color, 10%);
         }
+      }
+    }
+  }
+
+  // Media Queries para responsividade
+  @media (max-width: 768px) {
+    .top-menu {
+      padding: 8px 15px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+
+      .logo {
+        font-size: 1.25rem;
+
+        .icon {
+          font-size: 1.5rem;
+        }
+      }
+
+      .button-group {
+        width: 100%;
+        flex-direction: column;
+        gap: 10px;
+
+        .new-course-btn {
+          width: 100%;
+          justify-content: center;
+          padding: 10px;
+          font-size: 0.875rem;
+
+          .plus-icon {
+            margin-right: 6px;
+            font-size: 1rem;
+          }
+        }
+      }
+    }
+
+    .ant-modal {
+      max-width: 90%;
+    }
+
+    .ant-modal-header {
+      padding: 12px 16px;
+
+      .ant-modal-title {
+        font-size: 18px;
+      }
+    }
+
+    .modal-content-wrapper {
+      padding: 16px;
+
+      .modal-description {
+        font-size: 14px;
+        margin-bottom: 20px;
+      }
+
+      .course-form {
+        gap: 16px;
+
+        .form-group {
+          label {
+            font-size: 14px;
+          }
+
+          input,
+          textarea {
+            font-size: 14px;
+            padding: 8px 12px;
+          }
+
+          .drop-area {
+            padding: 16px;
+
+            .drop-icon {
+              font-size: 24px;
+            }
+
+            .drop-text {
+              font-size: 14px;
+            }
+
+            .select-file-btn {
+              padding: 8px 16px;
+              font-size: 14px;
+            }
+          }
+        }
+      }
+    }
+
+    .ant-modal-footer {
+      padding: 12px 16px;
+      gap: 12px;
+
+      button {
+        font-size: 14px;
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    .top-menu {
+      padding: 6px 10px;
+
+      .logo {
+        font-size: 1rem;
+
+        .icon {
+          font-size: 1.25rem;
+          margin-right: 6px;
+        }
+      }
+
+      .button-group {
+        gap: 8px;
+
+        .new-course-btn {
+          padding: 8px;
+          font-size: 0.75rem;
+
+          .plus-icon {
+            font-size: 0.875rem;
+          }
+        }
+      }
+    }
+
+    .ant-modal {
+      max-width: 95%;
+    }
+
+    .ant-modal-header {
+      padding: 10px 12px;
+
+      .ant-modal-title {
+        font-size: 16px;
+      }
+    }
+
+    .modal-content-wrapper {
+      padding: 12px;
+
+      .modal-description {
+        font-size: 13px;
+        margin-bottom: 16px;
+      }
+
+      .course-form {
+        gap: 12px;
+
+        .form-group {
+          label {
+            font-size: 13px;
+          }
+
+          input,
+          textarea {
+            font-size: 13px;
+            padding: 6px 10px;
+          }
+
+          .drop-area {
+            padding: 12px;
+
+            .drop-icon {
+              font-size: 20px;
+            }
+
+            .drop-text {
+              font-size: 13px;
+            }
+
+            .select-file-btn {
+              padding: 6px 12px;
+              font-size: 13px;
+            }
+          }
+        }
+      }
+    }
+
+    .ant-modal-footer {
+      padding: 10px 12px;
+
+      button {
+        font-size: 13px;
       }
     }
   }
